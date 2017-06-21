@@ -12,6 +12,7 @@ import src
 import src.utils as utils
 import openpyxl
 from datetime import datetime
+import math
 
 class Excel_Control(object):
 
@@ -65,18 +66,23 @@ class Excel_Control(object):
             task = task.replace(' ', '_').replace('-', '_')
 
             tmp = in_sheet.cell(row=i, column=4).value
-            start_time = tmp.strftime('%H:%M') if type(tmp) is datetime else ''
+            start_time = tmp if type(tmp) is datetime else ''
 
             tmp = in_sheet.cell(row=i, column=5).value
-            end_time = tmp.strftime('%H:%M') if type(tmp) is datetime else ''
+            end_time = tmp if type(tmp) is datetime else ''
 
             tmp = float(in_sheet.cell(row=i, column=6).value)
-            elapsed = int(tmp+0.5) if (tmp < 1000 and tmp > 0) else ''
+
+
+            elapsed = math.ceil(((end_time - start_time).total_seconds()) / 60) if \
+                 start_time and end_time else ''
 
             # gets the correct row from our config package
             index = getattr(src.index, task)
             r = index[country]
 
+            start_time = start_time.strftime('%H:%M') if type(start_time) is datetime else ''
+            end_time = end_time.strftime('%H:%M') if type(end_time) is datetime else ''
             out_sheet.cell(row=r, column=3).value = start_time
             out_sheet.cell(row=r, column=4).value = end_time
             out_sheet.cell(row=r, column=5).value = elapsed

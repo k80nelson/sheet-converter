@@ -7,6 +7,7 @@ import src as convert
 import src.config as config
 
 # main entry point of the program. Lots to configure --use python converter.py -h for deets
+
 def main():
     """Main entry point of program. Parses args and initializes data
     """
