@@ -2,8 +2,9 @@
 Sheet Converter
 ================
 
-  Author: Katie Nelson
-  Email:  KatherineE.Nelson@Scotiabank.com
+  Version: 2.4
+  Author:  Katie Nelson
+  Email:   KatherineE.Nelson@Scotiabank.com
 
 ================
   Installation

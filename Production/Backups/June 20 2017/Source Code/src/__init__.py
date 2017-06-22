@@ -11,7 +11,7 @@ import sys
 
 __project__     = 'sheet_converter'
 __description__ = 'Scrapes data from an input file and populates a template.'
-__version__     = '2.4'
+__version__     = '0.3'
 __all__         = [ "core", "utils", "excel_control" ]
 
 args  = None
