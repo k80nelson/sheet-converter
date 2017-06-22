@@ -1,6 +1,13 @@
 #! python3
 # -*- coding: utf-8 -*-
-"""Index: A collection of row indices for the template excel file"""
+"""Index: A collection of row indices for the template excel file
+
+
+ Each dictionary refers to a task in the input file. We grab the dictionary
+ for that task while processing the excel sheets, and then get the row we need
+ with the country name.
+ 
+"""
 class Index(object):
 
     def __init__(self):

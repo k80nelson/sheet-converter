@@ -39,13 +39,14 @@ def convert_xls(xls_path, testing=False):
 
     for i in range(0, xls_file.nsheets):
         sheet = xls_file.sheet_by_index(i)
+        # active sheet if its the first, otherwise make another sheet
         active = new_file.active if i==0 else new_file.create_sheet()
         active.title = sheet.name
         for row in range(0, sheet.nrows):
             for col in range(0, sheet.ncols):
                 value = sheet.cell_value(row, col)
 
-                #if cell is a date object
+                #if cell is a date object, save it as such
                 if sheet.cell_type(row, col) == 3:
                     date_tuple = (xlrd.xldate.xldate_as_tuple(value, 0))
                     value = datetime(*(date_tuple))
