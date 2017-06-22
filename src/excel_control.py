@@ -103,3 +103,5 @@ class Excel_Control(object):
             os.unlink(os.path.join(os.path.dirname(self.input_path), item))
 
         self.output_file.save(self.output_path)
+        cmd = "start " + self.output_path
+        os.system(cmd)
