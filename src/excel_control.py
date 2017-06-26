@@ -107,9 +107,16 @@ class Excel_Control(object):
             # if we have both a start and end time,
             # calculate the difference in minutes. We could also grab that from
             # the input file, but it often seems to be inaccurate, so we'll just
-            # do it ourselves.
-            elapsed = math.ceil(((end_time - start_time).total_seconds()) / 60) \
-                       if start_time and end_time else ''
+            # do it ourselves. If there is an issue calculating the time, advise
+            # the operator to check the start/end times.
+            if start_time and end_time:
+                elapsed = (end_time - start_time).total_seconds()
+                elapsed = math.ceil(elapsed / 60)
+                if (elapsed > 1400) or (elapsed < 0):
+                    elapsed = 'CHECK START/END TIME'
+            else:
+                elapsed = ''
+
 
             # Now we'll convert our datetime objects to formatted strings
             start_time = start_time.strftime('%H:%M') \
