@@ -84,7 +84,7 @@ class Excel_Control(object):
         # this runs for each row in the input file, except the first,
         # which is the column titles
 
-        for i in range(2, 90):
+        for i in range(2, in_sheet.max_row):
             # the country is column 2, and we're sanitizing it so all spaces and
             # periods are removed. This corresponds to an index in our dictionary
             # (./src/config/index.py)
@@ -94,7 +94,6 @@ class Excel_Control(object):
             # same idea for the task
             task = in_sheet.cell(row=i, column=3).value
             task = task.replace(' ', '_').replace('-', '_')
-
             # we're storing the time to make the next few lines more readable
             tmp = in_sheet.cell(row=i, column=4).value
             # two possible cases for the time--a datetime object or nothing
@@ -129,7 +128,10 @@ class Excel_Control(object):
 
             # this retrieves the appropriate dictionary of excel rows for the
             # specific task from our index object
-            task_rows = getattr(self.index, task)
+            try:
+                task_rows = getattr(self.index, task)
+            except:
+                continue
 
             # we then grab the row specific to the country we're working on
             r = task_rows[country]
