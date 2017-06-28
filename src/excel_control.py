@@ -46,6 +46,7 @@ class Excel_Control(object):
         self.backup_dir  = src.args.backup_dir if src.args.backup else None
         self.index       = excel_rows.Index()
 
+
     def __get_input_file(self):
         """Private method: get_input_file
         """
@@ -70,6 +71,38 @@ class Excel_Control(object):
         #returns an open excel workbook
         return openpyxl.load_workbook(self.output_path)
 
+    def __get_build_date(self, in_sheet):
+        r = 2
+        curr_date = in_sheet.cell(row=r, column=4).value
+        while not curr_date:
+            r += 1
+            curr_date = in_sheet.cell(row=r, column=4).value
+
+        start_day = (in_sheet.cell(row=r, column=4).value).day
+        curr_day = (in_sheet.cell(row=r, column=4).value).day
+        build_date = (in_sheet.cell(row=r, column=4).value)
+
+        for i in range(r, 92):
+            if not (in_sheet.cell(row=r, column=4).value):
+                continue
+
+            start_day = (in_sheet.cell(row=r, column=4).value).day
+
+            if start_day == curr_day:
+                continue
+
+            if start_day < curr_day:
+                break
+
+            if start_day > curr_day:
+                build_date = (in_sheet.cell(row=r, column=4).value)
+                break
+
+
+
+        return build_date
+
+
     def populate(self):
         """Populate: Populates the excel template with data
 
@@ -80,6 +113,9 @@ class Excel_Control(object):
         # We're really only working with the first ('active') excel sheet
         in_sheet = self.input_file.active
         out_sheet = self.output_file.active
+
+        build_date = self.__get_build_date(in_sheet)
+        out_sheet.cell(row=5, column=1).value = build_date.strftime('%m/%d/%Y')
 
         # this runs for each row in the input file, except the first,
         # which is the column titles
