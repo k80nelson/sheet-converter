@@ -12,6 +12,7 @@ import math
 import openpyxl
 from glob import iglob
 from datetime import datetime
+import sys
 
 import src
 import src.config.index as excel_rows
@@ -98,8 +99,6 @@ class Excel_Control(object):
                 build_date = (in_sheet.cell(row=r, column=4).value)
                 break
 
-
-
         return build_date
 
 
@@ -114,13 +113,18 @@ class Excel_Control(object):
         in_sheet = self.input_file.active
         out_sheet = self.output_file.active
 
+        # Check that the input sheet is populated:
+        if in_sheet.max_row == 1:
+            input("ERROR: Input sheet is empty. <Press enter to exit>")
+            sys.exit(1)
+
         build_date = self.__get_build_date(in_sheet)
         out_sheet.cell(row=5, column=1).value = build_date.strftime('%m/%d/%Y')
 
         # this runs for each row in the input file, except the first,
         # which is the column titles
 
-        for i in range(2, in_sheet.max_row):
+        for i in range(2, in_sheet.max_row+1):
             # the country is column 2, and we're sanitizing it so all spaces and
             # periods are removed. This corresponds to an index in our dictionary
             # (./src/config/index.py)
@@ -144,11 +148,17 @@ class Excel_Control(object):
             # the input file, but it often seems to be inaccurate, so we'll just
             # do it ourselves. If there is an issue calculating the time, advise
             # the operator to check the start/end times.
-            if start_time and end_time:
+            if end_time and not start_time:
+                elapsed = 'VERIFY START TIME'
+
+            elif start_time and not end_time:
+                elapsed = 'VERIFY END TIME'
+
+            elif start_time and end_time:
                 elapsed = (end_time - start_time).total_seconds()
                 elapsed = math.ceil(elapsed / 60)
                 if (elapsed > 1400) or (elapsed < 0):
-                    elapsed = 'CHECK START/END TIME'
+                    elapsed = 'CHECK START/END DATE'
             else:
                 elapsed = ''
 
